@@ -24,13 +24,13 @@ https://cdn.jsdelivr.net/gh/<org>/<repo>@<version>/<file-path>
 
 ```html
 <!-- Latest version from main branch -->
-<script src="https://cdn.jsdelivr.net/gh/your-org/public-assets@main/api-docs/init.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vendoo/public-assets@main/api-docs/init.js"></script>
 
 <!-- Specific version tag (recommended for production) -->
-<script src="https://cdn.jsdelivr.net/gh/your-org/public-assets@v1.0.0/api-docs/init.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vendoo/public-assets@v1.0.0/api-docs/init.js"></script>
 
 <!-- Specific commit -->
-<script src="https://cdn.jsdelivr.net/gh/your-org/public-assets@abc1234/api-docs/init.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vendoo/public-assets@abc1234/api-docs/init.js"></script>
 ```
 
 ### Best Practices
@@ -66,7 +66,7 @@ https://cdn.jsdelivr.net/gh/<org>/<repo>@<version>/<file-path>
 
 5. Use the CDN URL in your application:
    ```html
-   <script src="https://cdn.jsdelivr.net/gh/your-org/public-assets@v1.0.0/your-file.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/vendoo/public-assets@v1.0.0/your-file.js"></script>
    ```
 
 ## File Organization
@@ -98,7 +98,7 @@ JavaScript module for initializing API documentation interface with Mermaid diag
     sources: [/* your API specs */]
   };
 </script>
-<script src="https://cdn.jsdelivr.net/gh/your-org/public-assets@main/api-docs/init.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vendoo/public-assets@main/api-docs/init.js"></script>
 ```
 
 ## Versioning
