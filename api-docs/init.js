@@ -6,6 +6,7 @@
   panZoomScript.src = "https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js";
 
   let modalPanZoom = null;
+  const initialHash = window.location.hash;
 
   function createVendooStyle() {
     const style = document.createElement("style");
@@ -241,6 +242,44 @@
     }
   }
 
+  function waitForScalarReady(timeoutMs = 10000) {
+    return new Promise((resolve) => {
+      const start = Date.now();
+      const check = () => {
+        const sidebar = document.querySelector("[class*='sidebar']");
+        const content = document.querySelector("[class*='section-container'], [class*='reference-container']");
+        if (sidebar && content) {
+          resolve(true);
+        } else if (Date.now() - start > timeoutMs) {
+          resolve(false);
+        } else {
+          requestAnimationFrame(check);
+        }
+      };
+      check();
+    });
+  }
+
+  function restoreHash(hash) {
+    if (!hash || hash === "#" || hash === window.location.hash) return;
+
+    window.location.hash = "";
+    requestAnimationFrame(() => {
+      window.location.hash = hash;
+    });
+  }
+
+  function setupHashNavigation() {
+    if (!initialHash || initialHash === "#") return;
+
+    waitForScalarReady().then((ready) => {
+      if (!ready) return;
+      setTimeout(() => {
+        restoreHash(initialHash);
+      }, 300);
+    });
+  }
+
   panZoomScript.onload = () => {
     mermaidScript.onload = () => {
       mermaid.initialize({
@@ -314,6 +353,7 @@
     );
 
     Scalar.createApiReference("#app", scalaOptions);
+    setupHashNavigation();
   };
   if (!!!window.Scalar) {
     const scalarScript = document.createElement("script");
