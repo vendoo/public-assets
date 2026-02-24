@@ -242,41 +242,12 @@
     }
   }
 
-  function waitForScalarReady(timeoutMs = 10000) {
-    return new Promise((resolve) => {
-      const start = Date.now();
-      const check = () => {
-        const sidebar = document.querySelector("[class*='sidebar']");
-        const content = document.querySelector("[class*='section-container'], [class*='reference-container']");
-        if (sidebar && content) {
-          resolve(true);
-        } else if (Date.now() - start > timeoutMs) {
-          resolve(false);
-        } else {
-          requestAnimationFrame(check);
-        }
-      };
-      check();
-    });
-  }
-
   function restoreHash(hash) {
     if (!hash || hash === "#" || hash === window.location.hash) return;
 
     window.location.hash = "";
     requestAnimationFrame(() => {
       window.location.hash = hash;
-    });
-  }
-
-  function setupHashNavigation() {
-    if (!initialHash || initialHash === "#") return;
-
-    waitForScalarReady().then((ready) => {
-      if (!ready) return;
-      setTimeout(() => {
-        restoreHash(initialHash);
-      }, 300);
     });
   }
 
@@ -343,17 +314,25 @@
   const initDocs = () => {
     document.head.appendChild(panZoomScript);
 
+    let hashToRestore = initialHash;
+
     const scalaOptions = Object.assign(
       {},
       {
         persistAuth: true,
         customCss: `.darklight-reference { display: none !important; }`,
+        onLoaded: () => {
+          restoreHash(hashToRestore);
+          hashToRestore = null;
+        },
+        onDocumentSelect: () => {
+          hashToRestore = window.location.hash;
+        },
       },
       options,
     );
 
     Scalar.createApiReference("#app", scalaOptions);
-    setupHashNavigation();
   };
   if (!!!window.Scalar) {
     const scalarScript = document.createElement("script");
