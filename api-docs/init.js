@@ -316,11 +316,12 @@
 
     let hashToRestore = initialHash;
 
-    const scalaOptions = Object.assign(
+    const scalarOptions = Object.assign(
       {},
       {
         persistAuth: true,
         customCss: `.darklight-reference { display: none !important; }`,
+        baseServerURL: location.origin,
         onLoaded: () => {
           restoreHash(hashToRestore);
           hashToRestore = null;
@@ -332,7 +333,17 @@
       options,
     );
 
-    Scalar.createApiReference("#app", scalaOptions);
+    if (scalarOptions.sources && scalarOptions.sources.length) {
+      const replaceRegex = /https?:\/\/k[a-z-]+\.vendoo\.co/gi;
+      const newServer = location.protocol.startsWith("http") ? location.origin : null;
+
+      scalarOptions.sources = scalarOptions.sources.map((source) => ({
+        ...source,
+        servers: source.servers.map((s) => ({ ...s, url: newServer ? s.url.replace(replaceRegex, newServer) : s.url })),
+      }));
+    }
+
+    Scalar.createApiReference("#app", scalarOptions);
   };
   if (!!!window.Scalar) {
     const scalarScript = document.createElement("script");
